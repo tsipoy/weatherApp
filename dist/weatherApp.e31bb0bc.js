@@ -29789,38 +29789,72 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 const Context = (0, _react.createContext)();
 exports.Context = Context;
-const endPoint = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=san";
+const endPoint = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
 
 function ContextProvider({
   children
 }) {
-  const [weather, setWeather] = (0, _react.useState)([]);
-  const [isOpened, setIsOpened] = (0, _react.useState)(false);
+  const [state, dispatch] = (0, _react.useReducer)((state, action) => {
+    switch (action.type) {
+      case "SET_WEATHER":
+        {
+          return { ...state,
+            weather: action.citiesWeather
+          };
+          break;
+        }
+
+      case "SET_ISOPENED":
+        {
+          return { ...state,
+            isOpened: false
+          };
+          break;
+        }
+
+      case "SET_OPENPOUP":
+        {
+          return { ...state,
+            openPopup: true
+          };
+          break;
+        }
+
+      case "SET_CLOSEPOPUP":
+        {
+          return { ...state,
+            closePopup: false
+          };
+          break;
+        }
+
+      default:
+        return state;
+    }
+  }, {
+    weather: [],
+    isOpened: false,
+    openPopup: true,
+    closePopup: false
+  });
 
   const getWeather = async () => {
     const response = await fetch(endPoint);
     const getData = await response.json();
     console.log(getData);
-    setWeather(getData);
+    dispatch({
+      type: "SET_WEATHER",
+      citiesWeather: getData
+    });
   };
-
-  function openPopup() {
-    setIsOpened(true);
-  }
-
-  function closePopup() {
-    setIsOpened(false);
-  }
 
   (0, _react.useEffect)(() => {
     getWeather();
   }, []);
   return /*#__PURE__*/_react.default.createElement(Context.Provider, {
     value: {
-      weather,
-      isOpened,
-      openPopup,
-      closePopup
+      state,
+      dispatch
     }
   }, children);
 }
@@ -29842,23 +29876,25 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function Weather() {
   const {
+    state
+  } = (0, _react.useContext)(_GlobalContext.Context);
+  const {
     weather,
     isOpened,
     openPopup,
     closePopup
-  } = (0, _react.useContext)(_GlobalContext.Context); // const weatherLists = weather.map((weatherList) => {
-  //     <div key={weatherList.woeid}>
-  //         {weatherList.woeid}
-  //     </div>
-  // })
-  // console.log(weatherLists);
-
+  } = state;
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup
   }, "Seach for places"), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
+    type: "button",
     onClick: closePopup
   }, "X"), /*#__PURE__*/_react.default.createElement("input", {
-    placeholder: "London"
+    type: "text",
+    name: "city",
+    placeholder: "London" // value={inputValue}
+    // onChange={(e) => setInputValue(e.target.value)}
+
   }), /*#__PURE__*/_react.default.createElement("button", null, "Search")));
 }
 },{"react":"node_modules/react/index.js","./GlobalContext":"GlobalContext.js"}],"App.js":[function(require,module,exports) {
@@ -29920,7 +29956,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63851" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52828" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
