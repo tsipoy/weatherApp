@@ -32145,7 +32145,6 @@ function Weather() {
     defaultWeather
   } = state;
   const DivStyle = _styledComponents.default.div`
-
     nav {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -32166,6 +32165,7 @@ function Weather() {
       padding-block-start: 0;
       padding-inline-end: 0;
       padding-inline-start: 0;
+      max-width: -webkit-fill-available;
     }
 
     li {
@@ -32195,7 +32195,7 @@ function Weather() {
       alt: weatherList.weather_state_abbr
     })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("span", {
       className: "degrees"
-    }, weatherList.max_temp, " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, weatherList.min_temp, " \xBAc")));
+    }, Math.floor(weatherList.max_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, Math.floor(weatherList.min_temp), " \xBAc")));
   });
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup
@@ -32204,9 +32204,7 @@ function Weather() {
   }, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
     src: `https://www.metaweather.com//static/img/weather/${defaultWeather.weather_state_abbr}.svg`,
     alt: defaultWeather.weather_state_abbr
-  })), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.the_temp, " \xBAc"), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.weather_state_name), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.applicable_date), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("span", {
-    className: "degrees"
-  }, defaultWeather.max_temp, " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, defaultWeather.min_temp, " \xBAc")), /*#__PURE__*/_react.default.createElement("li", null, location.title)), /*#__PURE__*/_react.default.createElement("nav", null, weatherLists)), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
+  })), /*#__PURE__*/_react.default.createElement("li", null, Math.floor(defaultWeather.the_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.weather_state_name), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.applicable_date), /*#__PURE__*/_react.default.createElement("li", null, location.title)), /*#__PURE__*/_react.default.createElement("nav", null, weatherLists)), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: closePopup
   }, "X"), /*#__PURE__*/_react.default.createElement("input", {

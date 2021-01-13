@@ -7,7 +7,6 @@ export default function Weather() {
   const { weather, location, isLoaded, defaultWeather } = state;
 
   const DivStyle = Styled.div`
-
     nav {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -28,6 +27,7 @@ export default function Weather() {
       padding-block-start: 0;
       padding-inline-end: 0;
       padding-inline-start: 0;
+      max-width: -webkit-fill-available;
     }
 
     li {
@@ -61,8 +61,8 @@ export default function Weather() {
           />
         </li>
         <li>
-          <span className="degrees">{weatherList.max_temp} ºc</span>
-          <span>{weatherList.min_temp} ºc</span>
+          <span className="degrees">{Math.floor(weatherList.max_temp)} ºc</span>
+          <span>{Math.floor(weatherList.min_temp)} ºc</span>
         </li>
       </ul>
     );
@@ -82,13 +82,9 @@ export default function Weather() {
                 alt={defaultWeather.weather_state_abbr}
               />
             </li>
-            <li>{defaultWeather.the_temp} ºc</li>
+            <li>{Math.floor(defaultWeather.the_temp)} ºc</li>
             <li>{defaultWeather.weather_state_name}</li>
             <li>{defaultWeather.applicable_date}</li>
-            <li>
-              <span className="degrees">{defaultWeather.max_temp} ºc</span>
-              <span>{defaultWeather.min_temp} ºc</span>
-            </li>
             <li>{location.title}</li>
           </ul>
           <nav>{weatherLists}</nav>
