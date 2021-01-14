@@ -2,12 +2,17 @@ import React, { createContext, useReducer, useEffect, useState } from "react";
 
 const Context = createContext();
 
-const endPoint =
+const DEFAULT_ENDPOINT =
   "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
 
-function ContextProvider({ children }) {
+const SEARCH_ENDPOINT =
+  "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=a";
 
+function ContextProvider({ children }) {
   const [isOpened, setIsOpened] = useState(false);
+  const [ searchAllLocations, setSearchAllLocations ] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [locationSearched, setLocationSearched] = useState([]);
 
   const [state, dispatch] = useReducer(
     (state, action) => {
@@ -25,7 +30,7 @@ function ContextProvider({ children }) {
           break;
         }
         case "SET_LOADED": {
-          return {...state, isLoaded: false}
+          return { ...state, isLoaded: false };
           break;
         }
         default:
@@ -33,46 +38,57 @@ function ContextProvider({ children }) {
       }
     },
     {
+      defaultWeather: [],
       weather: [],
       location: [],
-      defaultWeather: [],
       isLoaded: true,
     }
   );
 
-  
   const getWeather = async () => {
-    const response = await fetch(endPoint);
+    const response = await fetch(DEFAULT_ENDPOINT);
     const getData = await response.json();
-    console.log(getData.consolidated_weather[0])
-    dispatch({type: "SET_WEATHER", citiesWeather: getData.consolidated_weather});
-    dispatch({type: "SET_LOCATION", location: getData});
-    dispatch({type: "SET_DEFAULT_WEATHER",  defaultWeather: getData.consolidated_weather[0]})
+    console.log(getData.consolidated_weather[0]);
+    dispatch({
+      type: "SET_WEATHER",
+      citiesWeather: getData.consolidated_weather,
+    });
+    dispatch({ type: "SET_LOCATION", location: getData });
+    dispatch({
+      type: "SET_DEFAULT_WEATHER",
+      defaultWeather: getData.consolidated_weather[0],
+    });
   };
 
-  // const getLocation = async () => {
-  //   const response = await fetch(endPoint);
-  //   const data = await response.json();
-  // }
-  
+  const getSearchLocation = async () => {
+    const response = await fetch(SEARCH_ENDPOINT);
+    const data = await response.json();
+    console.log(data);
+    setSearchAllLocations(data)
+    // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
+  }
+
   function openPopup() {
-    setIsOpened(true)
+    setIsOpened(true);
   }
 
   function closePopup() {
-    setIsOpened(false)
+    setIsOpened(false);
   }
 
   useEffect(() => {
     getWeather();
+    getSearchLocation();
   }, []);
 
   useEffect(() => {
-    setTimeout(() =>  dispatch({ type: "SET_LOADED"}), 5000) 
-  }, [])
+    setTimeout(() => dispatch({ type: "SET_LOADED" }), 5000);
+  }, []);
 
   return (
-    <Context.Provider value={{ state, dispatch, isOpened, openPopup, closePopup}}>
+    <Context.Provider
+      value={{ state, dispatch, isOpened, openPopup, closePopup, setInputValue, inputValue }}
+    >
       {children}
     </Context.Provider>
   );

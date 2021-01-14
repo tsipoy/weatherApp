@@ -3,11 +3,10 @@ import { Context } from "./GlobalContext";
 import Styled from "styled-components";
 
 export default function Weather() {
-  const { state, isOpened, openPopup, closePopup } = useContext(Context);
+  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue } = useContext(Context);
   const { weather, location, isLoaded, defaultWeather } = state;
 
   const DivStyle = Styled.div`
-
     position: relative;
 
     form {
@@ -19,6 +18,25 @@ export default function Weather() {
       left: 0;
       right: 0;
       bottom: 0;
+    }
+
+    label input {
+      color: #616475;
+      border: 1px solid #E7E7EB;
+      box-sizing: border-box;
+    }
+
+    label button {
+      font-size: 16px;
+      line-height: 19px;
+      padding-block-start: 15px;
+      padding-block-end: 16px;
+      padding-inline-start: 19px;
+      padding-inline-end: 14px;
+      margin-inline-start: 12px;
+      background-color: #3C47E9;
+      border: #3C47E9;
+      color: #E7E7EB;
     }
 
     .search-btn {
@@ -102,7 +120,7 @@ export default function Weather() {
   const month = applicableDate.toLocaleString("default", { month: "short" });
   const date = applicableDate.getDate();
 
-  const weatherLists = weather.map((weatherList) => {
+  const weatherLists = weather.slice(1).map((weatherList) => {
     return (
       <ul key={weatherList.id}>
         <li>{weatherList.applicable_date}</li>
@@ -120,6 +138,14 @@ export default function Weather() {
     );
   });
 
+  // const findLocation = allLocations.map((location) => {
+  //   return(
+  //     <div key={location.title}>
+  //       <button>{location.title}</button>
+  //     </div>
+  //   )
+  // })
+
   return (
     <DivStyle>
       <button onClick={openPopup} className="search-btn">
@@ -134,9 +160,9 @@ export default function Weather() {
             <input
               type="text"
               name="city"
-              placeholder="London"
-              // value={inputValue}
-              // onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Search location"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
             />
             <button type="submit">Search</button>
           </label>
@@ -177,9 +203,8 @@ export default function Weather() {
                   <p>
                     <b>{defaultWeather.humidity}</b> %
                   </p>
-                  <progress id="file" max="100" value="70">
-                    {" "}
-                    {defaultWeather.humidity} %{" "}
+                  <progress  max="100" value={defaultWeather.humidity}>
+                    {/* {defaultWeather.humidity} % */}
                   </progress>
                 </div>
                 <div className="hightlights">

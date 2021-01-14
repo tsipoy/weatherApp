@@ -1,5 +1,7 @@
 body {
     margin: 0;
+    background-color: #100E1D;
+    color: #E7E7EB;
 }
 
 html {
@@ -12,10 +14,6 @@ li {
 
 ul {
     text-align: center;
-}
-
-nav ul:nth-of-type(1) {
-    display: none;
 }
 
 b {

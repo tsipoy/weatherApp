@@ -29789,12 +29789,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 const Context = (0, _react.createContext)();
 exports.Context = Context;
-const endPoint = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
+const DEFAULT_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
+const SEARCH_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=a";
 
 function ContextProvider({
   children
 }) {
   const [isOpened, setIsOpened] = (0, _react.useState)(false);
+  const [searchAllLocations, setSearchAllLocations] = (0, _react.useState)([]);
+  const [inputValue, setInputValue] = (0, _react.useState)("");
+  const [locationSearched, setLocationSearched] = (0, _react.useState)([]);
   const [state, dispatch] = (0, _react.useReducer)((state, action) => {
     switch (action.type) {
       case "SET_DEFAULT_WEATHER":
@@ -29833,14 +29837,14 @@ function ContextProvider({
         return state;
     }
   }, {
+    defaultWeather: [],
     weather: [],
     location: [],
-    defaultWeather: [],
     isLoaded: true
   });
 
   const getWeather = async () => {
-    const response = await fetch(endPoint);
+    const response = await fetch(DEFAULT_ENDPOINT);
     const getData = await response.json();
     console.log(getData.consolidated_weather[0]);
     dispatch({
@@ -29855,11 +29859,14 @@ function ContextProvider({
       type: "SET_DEFAULT_WEATHER",
       defaultWeather: getData.consolidated_weather[0]
     });
-  }; // const getLocation = async () => {
-  //   const response = await fetch(endPoint);
-  //   const data = await response.json();
-  // }
+  };
 
+  const getSearchLocation = async () => {
+    const response = await fetch(SEARCH_ENDPOINT);
+    const data = await response.json();
+    console.log(data);
+    setSearchAllLocations(data); // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
+  };
 
   function openPopup() {
     setIsOpened(true);
@@ -29871,6 +29878,7 @@ function ContextProvider({
 
   (0, _react.useEffect)(() => {
     getWeather();
+    getSearchLocation();
   }, []);
   (0, _react.useEffect)(() => {
     setTimeout(() => dispatch({
@@ -29883,7 +29891,9 @@ function ContextProvider({
       dispatch,
       isOpened,
       openPopup,
-      closePopup
+      closePopup,
+      setInputValue,
+      inputValue
     }
   }, children);
 }
@@ -32136,7 +32146,9 @@ function Weather() {
     state,
     isOpened,
     openPopup,
-    closePopup
+    closePopup,
+    setInputValue,
+    inputValue
   } = (0, _react.useContext)(_GlobalContext.Context);
   const {
     weather,
@@ -32145,7 +32157,6 @@ function Weather() {
     defaultWeather
   } = state;
   const DivStyle = _styledComponents.default.div`
-
     position: relative;
 
     form {
@@ -32157,6 +32168,25 @@ function Weather() {
       left: 0;
       right: 0;
       bottom: 0;
+    }
+
+    label input {
+      color: #616475;
+      border: 1px solid #E7E7EB;
+      box-sizing: border-box;
+    }
+
+    label button {
+      font-size: 16px;
+      line-height: 19px;
+      padding-block-start: 15px;
+      padding-block-end: 16px;
+      padding-inline-start: 19px;
+      padding-inline-end: 14px;
+      margin-inline-start: 12px;
+      background-color: #3C47E9;
+      border: #3C47E9;
+      color: #E7E7EB;
     }
 
     .search-btn {
@@ -32240,7 +32270,7 @@ function Weather() {
     month: "short"
   });
   const date = applicableDate.getDate();
-  const weatherLists = weather.map(weatherList => {
+  const weatherLists = weather.slice(1).map(weatherList => {
     return /*#__PURE__*/_react.default.createElement("ul", {
       key: weatherList.id
     }, /*#__PURE__*/_react.default.createElement("li", null, weatherList.applicable_date), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
@@ -32249,7 +32279,14 @@ function Weather() {
     })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("span", {
       className: "degrees"
     }, Math.floor(weatherList.max_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, Math.floor(weatherList.min_temp), " \xBAc")));
-  });
+  }); // const findLocation = allLocations.map((location) => {
+  //   return(
+  //     <div key={location.title}>
+  //       <button>{location.title}</button>
+  //     </div>
+  //   )
+  // })
+
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup,
     className: "search-btn"
@@ -32260,9 +32297,9 @@ function Weather() {
   }, "X"), /*#__PURE__*/_react.default.createElement("label", null, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
     name: "city",
-    placeholder: "London" // value={inputValue}
-    // onChange={(e) => setInputValue(e.target.value)}
-
+    placeholder: "Search location",
+    value: inputValue,
+    onChange: e => setInputValue(e.target.value)
   }), /*#__PURE__*/_react.default.createElement("button", {
     type: "submit"
   }, "Search"))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
@@ -32277,10 +32314,9 @@ function Weather() {
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Wind status"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.wind_speed)), " mph"), /*#__PURE__*/_react.default.createElement("p", null, defaultWeather.wind_direction_compass)), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Humidity"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, defaultWeather.humidity), " %"), /*#__PURE__*/_react.default.createElement("progress", {
-    id: "file",
     max: "100",
-    value: "70"
-  }, " ", defaultWeather.humidity, " %", " ")), /*#__PURE__*/_react.default.createElement("div", {
+    value: defaultWeather.humidity
+  })), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Visibility"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.visibility)), " miles")), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
@@ -32303,11 +32339,9 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function App() {
-  const MainContent = _styledComponents.default.div`
-        background-color: #100E1D;
-        color: #E7E7EB;
-    `;
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "Onja Weather App"), /*#__PURE__*/_react.default.createElement(MainContent, null, /*#__PURE__*/_react.default.createElement(_Weather.default, null)));
+  // const MainContent = Styled.div `
+  // `;
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "Onja Weather App"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_Weather.default, null)));
 }
 },{"react":"node_modules/react/index.js","./Weather":"Weather.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"index.js":[function(require,module,exports) {
 "use strict";
