@@ -29875,7 +29875,7 @@ function ContextProvider({
   (0, _react.useEffect)(() => {
     setTimeout(() => dispatch({
       type: "SET_LOADED"
-    }), 2000);
+    }), 5000);
   }, []);
   return /*#__PURE__*/_react.default.createElement(Context.Provider, {
     value: {
@@ -32145,10 +32145,40 @@ function Weather() {
     defaultWeather
   } = state;
   const DivStyle = _styledComponents.default.div`
-    nav {
+
+    position: relative;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      background-color: #1E213A;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .search-btn {
+      background: #6E707A;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      color: #E7E7EB;
+      padding-block-start: 11px;
+      padding-block-end: 10px;
+      padding-inline-end: 18px;
+      padding-inline-start: 18px;
+      font-size: 16px;
+      line-height: 19px;
+    }
+
+    .close-btn {
+      max-width: max-content;
+    }
+    .general-weather {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      grid-gap: 26px;
+      padding-inline-start: 32px;
+      padding-inline-end: 6px;
     }
     
     ul {
@@ -32183,10 +32213,33 @@ function Weather() {
 
     }
 
-    nav ul img {
+    div ul img {
+      max-width: 150px;
+    }
+
+    .general-weather ul img {
       max-width: 56px;
     }
+
+    .hightlights {
+      background-color: #1E213A;
+      text-align: center;
+      margin-inline-end: 24px;
+      margin-inline-start: 23px;
+      margin-block-end: 32px;
+      padding-block-start: 22px;
+      padding-block-end: 41px;  
+    }
+
+    h2 {
+      margin-inline-start: 19px;
+    }
   `;
+  const applicableDate = new Date(defaultWeather.applicable_date);
+  const month = applicableDate.toLocaleString("default", {
+    month: "short"
+  });
+  const date = applicableDate.getDate();
   const weatherLists = weather.map(weatherList => {
     return /*#__PURE__*/_react.default.createElement("ul", {
       key: weatherList.id
@@ -32198,16 +32251,13 @@ function Weather() {
     }, Math.floor(weatherList.max_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, Math.floor(weatherList.min_temp), " \xBAc")));
   });
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
-    onClick: openPopup
-  }, "Seach for places"), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
-    className: "defaultWeather"
-  }, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
-    src: `https://www.metaweather.com//static/img/weather/${defaultWeather.weather_state_abbr}.svg`,
-    alt: defaultWeather.weather_state_abbr
-  })), /*#__PURE__*/_react.default.createElement("li", null, Math.floor(defaultWeather.the_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.weather_state_name), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.applicable_date), /*#__PURE__*/_react.default.createElement("li", null, location.title)), /*#__PURE__*/_react.default.createElement("nav", null, weatherLists)), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
+    onClick: openPopup,
+    className: "search-btn"
+  }, "Seach for places"), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
-    onClick: closePopup
-  }, "X"), /*#__PURE__*/_react.default.createElement("input", {
+    onClick: closePopup,
+    className: "close-btn"
+  }, "X"), /*#__PURE__*/_react.default.createElement("label", null, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
     name: "city",
     placeholder: "London" // value={inputValue}
@@ -32215,7 +32265,26 @@ function Weather() {
 
   }), /*#__PURE__*/_react.default.createElement("button", {
     type: "submit"
-  }, "Search")));
+  }, "Search"))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
+    className: "defaultWeather"
+  }, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
+    src: `https://www.metaweather.com//static/img/weather/${defaultWeather.weather_state_abbr}.svg`,
+    alt: defaultWeather.weather_state_abbr
+  })), /*#__PURE__*/_react.default.createElement("li", null, Math.floor(defaultWeather.the_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.weather_state_name), /*#__PURE__*/_react.default.createElement("li", null, date, " ", month), /*#__PURE__*/_react.default.createElement("li", null, location.title)), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("nav", {
+    className: "general-weather"
+  }, weatherLists), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h2", null, "Today\u2019s Hightlights"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
+    className: "hightlights"
+  }, /*#__PURE__*/_react.default.createElement("h3", null, "Wind status"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.wind_speed)), " mph"), /*#__PURE__*/_react.default.createElement("p", null, defaultWeather.wind_direction_compass)), /*#__PURE__*/_react.default.createElement("div", {
+    className: "hightlights"
+  }, /*#__PURE__*/_react.default.createElement("h3", null, "Humidity"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, defaultWeather.humidity), " %"), /*#__PURE__*/_react.default.createElement("progress", {
+    id: "file",
+    max: "100",
+    value: "70"
+  }, " ", defaultWeather.humidity, " %", " ")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "hightlights"
+  }, /*#__PURE__*/_react.default.createElement("h3", null, "Visibility"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.visibility)), " miles")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "hightlights"
+  }, /*#__PURE__*/_react.default.createElement("h3", null, "Air Pressure"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.air_pressure)), " mb")))))));
 }
 },{"react":"node_modules/react/index.js","./GlobalContext":"GlobalContext.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"App.js":[function(require,module,exports) {
 "use strict";
@@ -32282,7 +32351,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55900" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61276" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

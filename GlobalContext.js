@@ -68,7 +68,7 @@ function ContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    setTimeout(() =>  dispatch({ type: "SET_LOADED"}), 2000) 
+    setTimeout(() =>  dispatch({ type: "SET_LOADED"}), 5000) 
   }, [])
 
   return (

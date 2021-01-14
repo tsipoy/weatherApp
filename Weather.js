@@ -7,10 +7,40 @@ export default function Weather() {
   const { weather, location, isLoaded, defaultWeather } = state;
 
   const DivStyle = Styled.div`
-    nav {
+
+    position: relative;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      background-color: #1E213A;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .search-btn {
+      background: #6E707A;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      color: #E7E7EB;
+      padding-block-start: 11px;
+      padding-block-end: 10px;
+      padding-inline-end: 18px;
+      padding-inline-start: 18px;
+      font-size: 16px;
+      line-height: 19px;
+    }
+
+    .close-btn {
+      max-width: max-content;
+    }
+    .general-weather {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      grid-gap: 26px;
+      padding-inline-start: 32px;
+      padding-inline-end: 6px;
     }
     
     ul {
@@ -45,10 +75,32 @@ export default function Weather() {
 
     }
 
-    nav ul img {
+    div ul img {
+      max-width: 150px;
+    }
+
+    .general-weather ul img {
       max-width: 56px;
     }
+
+    .hightlights {
+      background-color: #1E213A;
+      text-align: center;
+      margin-inline-end: 24px;
+      margin-inline-start: 23px;
+      margin-block-end: 32px;
+      padding-block-start: 22px;
+      padding-block-end: 41px;  
+    }
+
+    h2 {
+      margin-inline-start: 19px;
+    }
   `;
+
+  const applicableDate = new Date(defaultWeather.applicable_date);
+  const month = applicableDate.toLocaleString("default", { month: "short" });
+  const date = applicableDate.getDate();
 
   const weatherLists = weather.map((weatherList) => {
     return (
@@ -70,7 +122,26 @@ export default function Weather() {
 
   return (
     <DivStyle>
-      <button onClick={openPopup}>Seach for places</button>
+      <button onClick={openPopup} className="search-btn">
+        Seach for places
+      </button>
+      {isOpened && (
+        <form>
+          <button type="button" onClick={closePopup} className="close-btn">
+            X
+          </button>
+          <label>
+            <input
+              type="text"
+              name="city"
+              placeholder="London"
+              // value={inputValue}
+              // onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button type="submit">Search</button>
+          </label>
+        </form>
+      )}
       {isLoaded ? (
         <h2>Loading...</h2>
       ) : (
@@ -84,26 +155,49 @@ export default function Weather() {
             </li>
             <li>{Math.floor(defaultWeather.the_temp)} ºc</li>
             <li>{defaultWeather.weather_state_name}</li>
-            <li>{defaultWeather.applicable_date}</li>
+            <li>
+              {date} {month}
+            </li>
             <li>{location.title}</li>
           </ul>
-          <nav>{weatherLists}</nav>
+          <div>
+            <nav className="general-weather">{weatherLists}</nav>
+            <div>
+              <h2>Today’s Hightlights</h2>
+              <div>
+                <div className="hightlights">
+                  <h3>Wind status</h3>
+                  <p>
+                    <b>{Math.floor(defaultWeather.wind_speed)}</b> mph
+                  </p>
+                  <p>{defaultWeather.wind_direction_compass}</p>
+                </div>
+                <div className="hightlights">
+                  <h3>Humidity</h3>
+                  <p>
+                    <b>{defaultWeather.humidity}</b> %
+                  </p>
+                  <progress id="file" max="100" value="70">
+                    {" "}
+                    {defaultWeather.humidity} %{" "}
+                  </progress>
+                </div>
+                <div className="hightlights">
+                  <h3>Visibility</h3>
+                  <p>
+                    <b>{Math.floor(defaultWeather.visibility)}</b> miles
+                  </p>
+                </div>
+                <div className="hightlights">
+                  <h3>Air Pressure</h3>
+                  <p>
+                    <b>{Math.floor(defaultWeather.air_pressure)}</b> mb
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-      {isOpened && (
-        <form>
-          <button type="button" onClick={closePopup}>
-            X
-          </button>
-          <input
-            type="text"
-            name="city"
-            placeholder="London"
-            // value={inputValue}
-            // onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button type="submit">Search</button>
-        </form>
       )}
     </DivStyle>
   );
