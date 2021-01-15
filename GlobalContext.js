@@ -9,13 +9,9 @@ const SEARCH_ENDPOINT =
   "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=";
 
 function ContextProvider({ children }) {
-  const [ locations, setLocations ] = useState("San Francisco")
+  const [locations, setLocations] = useState("London");
 
   const [isOpened, setIsOpened] = useState(false);
-  const [ searchAllLocations, setSearchAllLocations ] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [locationSearched, setLocationSearched] = useState([]);
-
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -50,8 +46,9 @@ function ContextProvider({ children }) {
   const getWeather = async () => {
     const res = await fetch(`${SEARCH_ENDPOINT}${locations}`);
     const getlocations = await res.json();
-    const woeid = getlocations.map(index => index.woeid)
-    console.log(woeid)
+    const woeid = getlocations.map((index) => index.title);
+    setLocations(woeid)
+    console.log(woeid);
 
     const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
@@ -67,16 +64,6 @@ function ContextProvider({ children }) {
     });
   };
 
-  // const getSearchLocation = async () => {
-  //   const response = await fetch(SEARCH_ENDPOINT);
-  //   const data = await response.json();
-  //   console.log(data);
-  //   setSearchAllLocations(data)
-  //   // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
-  // }
-
-
-
   function openPopup() {
     setIsOpened(true);
   }
@@ -87,7 +74,6 @@ function ContextProvider({ children }) {
 
   useEffect(() => {
     getWeather();
-    // getSearchLocation();
   }, []);
 
   useEffect(() => {
@@ -96,7 +82,15 @@ function ContextProvider({ children }) {
 
   return (
     <Context.Provider
-      value={{ state, dispatch, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations }}
+      value={{
+        state,
+        dispatch,
+        isOpened,
+        openPopup,
+        closePopup,
+        locations,
+        setLocations,
+      }}
     >
       {children}
     </Context.Provider>

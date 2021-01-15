@@ -3,7 +3,6 @@ import { Context } from "./GlobalContext";
 import Styled from "styled-components";
 
 export default function Weather() {
-
   const DivStyle = Styled.div`
     position: relative;
 
@@ -16,6 +15,7 @@ export default function Weather() {
       left: 0;
       right: 0;
       bottom: 0;
+      padding-inline-start: 16px;
     }
 
     label input {
@@ -27,7 +27,6 @@ export default function Weather() {
       box-sizing: border-box;
       padding-block-start: 14px;
       padding-block-end: 15px;
-      padding-inline-start: 49px;
     }
 
     label button {
@@ -151,10 +150,17 @@ export default function Weather() {
 
     }
   `;
-
-  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations } = useContext(Context);
+  
+  const {
+    state,
+    isOpened,
+    openPopup,
+    closePopup,
+    locations,
+    setLocations,
+  } = useContext(Context);
   const { weather, location, isLoaded, defaultWeather } = state;
-  const [ searchValue, setSearchValue ] = useState([])
+  const [searchValue, setSearchValue] = useState("");
 
   const applicableDate = new Date(defaultWeather.applicable_date);
   const month = applicableDate.toLocaleString("default", { month: "short" });
@@ -177,14 +183,12 @@ export default function Weather() {
       </ul>
     );
   });
-  
+
   const submitSearch = (e) => {
     e.preventDefault();
-    setSearchValue(locations)
-    console.log(e.target.value)
-  }
-
-  console.log(inputValue)
+    setSearchValue(locations);
+    console.log(e.target.value);
+  };
 
   return (
     <DivStyle>
@@ -201,13 +205,13 @@ export default function Weather() {
               <input
                 type="text"
                 placeholder="Search location"
-                value={location}
-                onChange={(e) => setInputValue(e.target.value)}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
               />
-              <button type="submit" onClick={submitSearch}>Search</button>
+              <button>Search</button>
             </label>
+            <button>{searchValue}</button>
           </form>
-          <button>{locations.title}</button>
         </>
       )}
       {isLoaded ? (
@@ -245,7 +249,7 @@ export default function Weather() {
                   <p>
                     <b>{defaultWeather.humidity}</b> %
                   </p>
-                  <progress  max="100" value={defaultWeather.humidity}>
+                  <progress max="100" value={defaultWeather.humidity}>
                     {/* {defaultWeather.humidity} % */}
                   </progress>
                 </div>
