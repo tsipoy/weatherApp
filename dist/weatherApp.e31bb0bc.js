@@ -29789,12 +29789,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 const Context = (0, _react.createContext)();
 exports.Context = Context;
-const DEFAULT_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
-const SEARCH_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=a";
+const DEFAULT_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/";
+const SEARCH_ENDPOINT = "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=";
 
 function ContextProvider({
   children
 }) {
+  const [locations, setLocations] = (0, _react.useState)("San Francisco");
   const [isOpened, setIsOpened] = (0, _react.useState)(false);
   const [searchAllLocations, setSearchAllLocations] = (0, _react.useState)([]);
   const [inputValue, setInputValue] = (0, _react.useState)("");
@@ -29844,7 +29845,11 @@ function ContextProvider({
   });
 
   const getWeather = async () => {
-    const response = await fetch(DEFAULT_ENDPOINT);
+    const res = await fetch(`${SEARCH_ENDPOINT}${locations}`);
+    const getlocations = await res.json();
+    const woeid = getlocations.map(index => index.woeid);
+    console.log(woeid);
+    const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
     console.log(getData.consolidated_weather[0]);
     dispatch({
@@ -29893,7 +29898,9 @@ function ContextProvider({
       openPopup,
       closePopup,
       setInputValue,
-      inputValue
+      inputValue,
+      locations,
+      setLocations
     }
   }, children);
 }
@@ -32148,7 +32155,9 @@ function Weather() {
     openPopup,
     closePopup,
     setInputValue,
-    inputValue
+    inputValue,
+    locations,
+    setLocations
   } = (0, _react.useContext)(_GlobalContext.Context);
   const {
     weather,
@@ -32156,6 +32165,7 @@ function Weather() {
     isLoaded,
     defaultWeather
   } = state;
+  const [searchValue, setSearchValue] = (0, _react.useState)([]);
   const DivStyle = _styledComponents.default.div`
     position: relative;
 
@@ -32171,9 +32181,15 @@ function Weather() {
     }
 
     label input {
+      background-color: #1E213A;
+      font-size: 16px;
+      line-height: 19px;
       color: #616475;
       border: 1px solid #E7E7EB;
       box-sizing: border-box;
+      padding-block-start: 14px;
+      padding-block-end: 15px;
+      padding-inline-start: 49px;
     }
 
     label button {
@@ -32203,6 +32219,11 @@ function Weather() {
 
     .close-btn {
       max-width: max-content;
+      color: #E7E7EB;
+      background-color: transparent;
+      border: none;
+      padding-block-start: 17px;
+      padding-block-end: 30px;
     }
     .general-weather {
       display: grid;
@@ -32279,18 +32300,20 @@ function Weather() {
     })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("span", {
       className: "degrees"
     }, Math.floor(weatherList.max_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, Math.floor(weatherList.min_temp), " \xBAc")));
-  }); // const findLocation = allLocations.map((location) => {
-  //   return(
-  //     <div key={location.title}>
-  //       <button>{location.title}</button>
-  //     </div>
-  //   )
-  // })
+  });
+
+  const submitSearch = e => {
+    e.preventDefault();
+    setSearchValue(locations);
+    console.log(e.target.value);
+  };
 
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup,
     className: "search-btn"
-  }, "Seach for places"), isOpened && /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("button", {
+  }, "Seach for places"), isOpened && /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("form", {
+    onSubmit: submitSearch
+  }, /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: closePopup,
     className: "close-btn"
@@ -32298,11 +32321,11 @@ function Weather() {
     type: "text",
     name: "city",
     placeholder: "Search location",
-    value: inputValue,
-    onChange: e => setInputValue(e.target.value)
+    value: location,
+    onChange: e => setLocations(e.target.value)
   }), /*#__PURE__*/_react.default.createElement("button", {
     type: "submit"
-  }, "Search"))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
+  }, "Search"))), /*#__PURE__*/_react.default.createElement("button", null, locations)), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
     className: "defaultWeather"
   }, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
     src: `https://www.metaweather.com//static/img/weather/${defaultWeather.weather_state_abbr}.svg`,
@@ -32385,7 +32408,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61276" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49237" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

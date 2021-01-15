@@ -3,8 +3,9 @@ import { Context } from "./GlobalContext";
 import Styled from "styled-components";
 
 export default function Weather() {
-  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue } = useContext(Context);
+  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations } = useContext(Context);
   const { weather, location, isLoaded, defaultWeather } = state;
+  const [ searchValue, setSearchValue ] = useState([])
 
   const DivStyle = Styled.div`
     position: relative;
@@ -21,9 +22,15 @@ export default function Weather() {
     }
 
     label input {
+      background-color: #1E213A;
+      font-size: 16px;
+      line-height: 19px;
       color: #616475;
       border: 1px solid #E7E7EB;
       box-sizing: border-box;
+      padding-block-start: 14px;
+      padding-block-end: 15px;
+      padding-inline-start: 49px;
     }
 
     label button {
@@ -53,6 +60,11 @@ export default function Weather() {
 
     .close-btn {
       max-width: max-content;
+      color: #E7E7EB;
+      background-color: transparent;
+      border: none;
+      padding-block-start: 17px;
+      padding-block-end: 30px;
     }
     .general-weather {
       display: grid;
@@ -137,14 +149,12 @@ export default function Weather() {
       </ul>
     );
   });
-
-  // const findLocation = allLocations.map((location) => {
-  //   return(
-  //     <div key={location.title}>
-  //       <button>{location.title}</button>
-  //     </div>
-  //   )
-  // })
+  
+  const submitSearch = (e) => {
+    e.preventDefault();
+    setSearchValue(locations)
+    console.log(e.target.value)
+  }
 
   return (
     <DivStyle>
@@ -152,21 +162,24 @@ export default function Weather() {
         Seach for places
       </button>
       {isOpened && (
-        <form>
-          <button type="button" onClick={closePopup} className="close-btn">
-            X
-          </button>
-          <label>
-            <input
-              type="text"
-              name="city"
-              placeholder="Search location"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <button type="submit">Search</button>
-          </label>
-        </form>
+        <>
+          <form onSubmit={submitSearch}>
+            <button type="button" onClick={closePopup} className="close-btn">
+              X
+            </button>
+            <label>
+              <input
+                type="text"
+                name="city"
+                placeholder="Search location"
+                value={location}
+                onChange={(e) => setLocations(e.target.value)}
+              />
+              <button type="submit">Search</button>
+            </label>
+          </form>
+          <button>{locations}</button>
+        </>
       )}
       {isLoaded ? (
         <h2>Loading...</h2>

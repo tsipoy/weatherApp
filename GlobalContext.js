@@ -3,12 +3,14 @@ import React, { createContext, useReducer, useEffect, useState } from "react";
 const Context = createContext();
 
 const DEFAULT_ENDPOINT =
-  "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/2487956/";
+  "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/";
 
 const SEARCH_ENDPOINT =
-  "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=a";
+  "https://cors-anywhere.herokuapp.com/www.metaweather.com/api/location/search/?query=";
 
 function ContextProvider({ children }) {
+  const [ locations, setLocations ] = useState("San Francisco")
+
   const [isOpened, setIsOpened] = useState(false);
   const [ searchAllLocations, setSearchAllLocations ] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -46,7 +48,12 @@ function ContextProvider({ children }) {
   );
 
   const getWeather = async () => {
-    const response = await fetch(DEFAULT_ENDPOINT);
+    const res = await fetch(`${SEARCH_ENDPOINT}${locations}`);
+    const getlocations = await res.json();
+    const woeid = getlocations.map(index => index.woeid)
+    console.log(woeid)
+
+    const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
     console.log(getData.consolidated_weather[0]);
     dispatch({
@@ -68,6 +75,8 @@ function ContextProvider({ children }) {
     // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
   }
 
+
+
   function openPopup() {
     setIsOpened(true);
   }
@@ -87,7 +96,7 @@ function ContextProvider({ children }) {
 
   return (
     <Context.Provider
-      value={{ state, dispatch, isOpened, openPopup, closePopup, setInputValue, inputValue }}
+      value={{ state, dispatch, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations }}
     >
       {children}
     </Context.Provider>
