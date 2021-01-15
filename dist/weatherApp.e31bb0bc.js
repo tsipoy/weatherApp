@@ -29864,14 +29864,14 @@ function ContextProvider({
       type: "SET_DEFAULT_WEATHER",
       defaultWeather: getData.consolidated_weather[0]
     });
-  };
+  }; // const getSearchLocation = async () => {
+  //   const response = await fetch(SEARCH_ENDPOINT);
+  //   const data = await response.json();
+  //   console.log(data);
+  //   setSearchAllLocations(data)
+  //   // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
+  // }
 
-  const getSearchLocation = async () => {
-    const response = await fetch(SEARCH_ENDPOINT);
-    const data = await response.json();
-    console.log(data);
-    setSearchAllLocations(data); // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
-  };
 
   function openPopup() {
     setIsOpened(true);
@@ -29882,8 +29882,7 @@ function ContextProvider({
   }
 
   (0, _react.useEffect)(() => {
-    getWeather();
-    getSearchLocation();
+    getWeather(); // getSearchLocation();
   }, []);
   (0, _react.useEffect)(() => {
     setTimeout(() => dispatch({
@@ -32149,23 +32148,6 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function Weather() {
-  const {
-    state,
-    isOpened,
-    openPopup,
-    closePopup,
-    setInputValue,
-    inputValue,
-    locations,
-    setLocations
-  } = (0, _react.useContext)(_GlobalContext.Context);
-  const {
-    weather,
-    location,
-    isLoaded,
-    defaultWeather
-  } = state;
-  const [searchValue, setSearchValue] = (0, _react.useState)([]);
   const DivStyle = _styledComponents.default.div`
     position: relative;
 
@@ -32218,6 +32200,7 @@ function Weather() {
     }
 
     .close-btn {
+      font-size: larger;
       max-width: max-content;
       color: #E7E7EB;
       background-color: transparent;
@@ -32285,7 +32268,50 @@ function Weather() {
     h2 {
       margin-inline-start: 19px;
     }
+
+    @media(min-width: 800px) {
+      .weatherLists {
+        display: grid;
+        grid-template-columns: 33% 67%;
+      }
+
+      .defaultWeather li {
+        padding-block-end: 81px;
+      }
+
+      .highlights-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .general-weather {
+        display: flex;
+        flex-direction: rows;
+      }
+
+      .general-weather ul{
+        margin-inline-end: 42px;
+      }
+
+    }
   `;
+  const {
+    state,
+    isOpened,
+    openPopup,
+    closePopup,
+    setInputValue,
+    inputValue,
+    locations,
+    setLocations
+  } = (0, _react.useContext)(_GlobalContext.Context);
+  const {
+    weather,
+    location,
+    isLoaded,
+    defaultWeather
+  } = state;
+  const [searchValue, setSearchValue] = (0, _react.useState)([]);
   const applicableDate = new Date(defaultWeather.applicable_date);
   const month = applicableDate.toLocaleString("default", {
     month: "short"
@@ -32308,6 +32334,7 @@ function Weather() {
     console.log(e.target.value);
   };
 
+  console.log(inputValue);
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup,
     className: "search-btn"
@@ -32319,20 +32346,24 @@ function Weather() {
     className: "close-btn"
   }, "X"), /*#__PURE__*/_react.default.createElement("label", null, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
-    name: "city",
     placeholder: "Search location",
     value: location,
-    onChange: e => setLocations(e.target.value)
+    onChange: e => setInputValue(e.target.value)
   }), /*#__PURE__*/_react.default.createElement("button", {
-    type: "submit"
-  }, "Search"))), /*#__PURE__*/_react.default.createElement("button", null, locations)), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("ul", {
+    type: "submit",
+    onClick: submitSearch
+  }, "Search"))), /*#__PURE__*/_react.default.createElement("button", null, locations.title)), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
+    className: "weatherLists"
+  }, /*#__PURE__*/_react.default.createElement("ul", {
     className: "defaultWeather"
   }, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("img", {
     src: `https://www.metaweather.com//static/img/weather/${defaultWeather.weather_state_abbr}.svg`,
     alt: defaultWeather.weather_state_abbr
   })), /*#__PURE__*/_react.default.createElement("li", null, Math.floor(defaultWeather.the_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("li", null, defaultWeather.weather_state_name), /*#__PURE__*/_react.default.createElement("li", null, date, " ", month), /*#__PURE__*/_react.default.createElement("li", null, location.title)), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("nav", {
     className: "general-weather"
-  }, weatherLists), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h2", null, "Today\u2019s Hightlights"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
+  }, weatherLists), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h2", null, "Today\u2019s Hightlights"), /*#__PURE__*/_react.default.createElement("div", {
+    className: "highlights-wrapper"
+  }, /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Wind status"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.wind_speed)), " mph"), /*#__PURE__*/_react.default.createElement("p", null, defaultWeather.wind_direction_compass)), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
@@ -32408,7 +32439,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49237" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56467" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

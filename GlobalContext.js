@@ -67,13 +67,13 @@ function ContextProvider({ children }) {
     });
   };
 
-  const getSearchLocation = async () => {
-    const response = await fetch(SEARCH_ENDPOINT);
-    const data = await response.json();
-    console.log(data);
-    setSearchAllLocations(data)
-    // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
-  }
+  // const getSearchLocation = async () => {
+  //   const response = await fetch(SEARCH_ENDPOINT);
+  //   const data = await response.json();
+  //   console.log(data);
+  //   setSearchAllLocations(data)
+  //   // dispatch({type: "SET_ALL_LOCATIONS", allLocations: data})
+  // }
 
 
 
@@ -87,7 +87,7 @@ function ContextProvider({ children }) {
 
   useEffect(() => {
     getWeather();
-    getSearchLocation();
+    // getSearchLocation();
   }, []);
 
   useEffect(() => {

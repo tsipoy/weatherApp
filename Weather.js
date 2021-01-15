@@ -3,9 +3,6 @@ import { Context } from "./GlobalContext";
 import Styled from "styled-components";
 
 export default function Weather() {
-  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations } = useContext(Context);
-  const { weather, location, isLoaded, defaultWeather } = state;
-  const [ searchValue, setSearchValue ] = useState([])
 
   const DivStyle = Styled.div`
     position: relative;
@@ -59,6 +56,7 @@ export default function Weather() {
     }
 
     .close-btn {
+      font-size: larger;
       max-width: max-content;
       color: #E7E7EB;
       background-color: transparent;
@@ -126,7 +124,37 @@ export default function Weather() {
     h2 {
       margin-inline-start: 19px;
     }
+
+    @media(min-width: 800px) {
+      .weatherLists {
+        display: grid;
+        grid-template-columns: 33% 67%;
+      }
+
+      .defaultWeather li {
+        padding-block-end: 81px;
+      }
+
+      .highlights-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .general-weather {
+        display: flex;
+        flex-direction: rows;
+      }
+
+      .general-weather ul{
+        margin-inline-end: 42px;
+      }
+
+    }
   `;
+
+  const { state, isOpened, openPopup, closePopup, setInputValue, inputValue, locations, setLocations } = useContext(Context);
+  const { weather, location, isLoaded, defaultWeather } = state;
+  const [ searchValue, setSearchValue ] = useState([])
 
   const applicableDate = new Date(defaultWeather.applicable_date);
   const month = applicableDate.toLocaleString("default", { month: "short" });
@@ -156,6 +184,8 @@ export default function Weather() {
     console.log(e.target.value)
   }
 
+  console.log(inputValue)
+
   return (
     <DivStyle>
       <button onClick={openPopup} className="search-btn">
@@ -170,21 +200,20 @@ export default function Weather() {
             <label>
               <input
                 type="text"
-                name="city"
                 placeholder="Search location"
                 value={location}
-                onChange={(e) => setLocations(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
               />
-              <button type="submit">Search</button>
+              <button type="submit" onClick={submitSearch}>Search</button>
             </label>
           </form>
-          <button>{locations}</button>
+          <button>{locations.title}</button>
         </>
       )}
       {isLoaded ? (
         <h2>Loading...</h2>
       ) : (
-        <div>
+        <div className="weatherLists">
           <ul className="defaultWeather">
             <li>
               <img
@@ -203,7 +232,7 @@ export default function Weather() {
             <nav className="general-weather">{weatherLists}</nav>
             <div>
               <h2>Today’s Hightlights</h2>
-              <div>
+              <div className="highlights-wrapper">
                 <div className="hightlights">
                   <h3>Wind status</h3>
                   <p>
