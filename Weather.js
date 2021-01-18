@@ -125,6 +125,10 @@ export default function Weather() {
     }
 
     @media(min-width: 800px) {
+
+      .form {
+        max-width: 32%;
+      }
       .weatherLists {
         display: grid;
         grid-template-columns: 33% 67%;
@@ -158,9 +162,12 @@ export default function Weather() {
     closePopup,
     locations,
     setLocations,
+    searchResult, 
+    setSearchResult,
+    searchValue, 
+    setSearchValue
   } = useContext(Context);
   const { weather, location, isLoaded, defaultWeather } = state;
-  const [searchValue, setSearchValue] = useState("");
 
   const applicableDate = new Date(defaultWeather.applicable_date);
   const month = applicableDate.toLocaleString("default", { month: "short" });
@@ -183,6 +190,13 @@ export default function Weather() {
       </ul>
     );
   });
+
+  const results = weather.map((weatherResult) => {
+    return (
+      <button key={weatherResult.id}>{weatherResult.title}</button>
+    )
+  })
+
 
   const submitSearch = (e) => {
     e.preventDefault();
@@ -210,7 +224,9 @@ export default function Weather() {
               />
               <button>Search</button>
             </label>
-            <button>{searchValue}</button>
+            <div>
+              {results}
+            </div>
           </form>
         </>
       )}

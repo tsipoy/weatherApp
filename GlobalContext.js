@@ -10,6 +10,9 @@ const SEARCH_ENDPOINT =
 
 function ContextProvider({ children }) {
   const [locations, setLocations] = useState("London");
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+
 
   const [isOpened, setIsOpened] = useState(false);
   const [state, dispatch] = useReducer(
@@ -46,13 +49,14 @@ function ContextProvider({ children }) {
   const getWeather = async () => {
     const res = await fetch(`${SEARCH_ENDPOINT}${locations}`);
     const getlocations = await res.json();
-    const woeid = getlocations.map((index) => index.title);
+    const woeid = getlocations.map((index) => index.woeid);
     setLocations(woeid)
-    console.log(woeid);
+    console.log(getlocations);
 
     const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
     console.log(getData.consolidated_weather[0]);
+    console.log(getData)
     dispatch({
       type: "SET_WEATHER",
       citiesWeather: getData.consolidated_weather,
@@ -90,6 +94,10 @@ function ContextProvider({ children }) {
         closePopup,
         locations,
         setLocations,
+        searchResult,
+        setSearchResult,
+        searchValue,
+        setSearchValue
       }}
     >
       {children}

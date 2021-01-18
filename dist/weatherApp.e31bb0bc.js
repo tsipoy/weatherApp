@@ -29796,6 +29796,8 @@ function ContextProvider({
   children
 }) {
   const [locations, setLocations] = (0, _react.useState)("London");
+  const [searchResult, setSearchResult] = (0, _react.useState)([]);
+  const [searchValue, setSearchValue] = (0, _react.useState)("");
   const [isOpened, setIsOpened] = (0, _react.useState)(false);
   const [state, dispatch] = (0, _react.useReducer)((state, action) => {
     switch (action.type) {
@@ -29844,12 +29846,13 @@ function ContextProvider({
   const getWeather = async () => {
     const res = await fetch(`${SEARCH_ENDPOINT}${locations}`);
     const getlocations = await res.json();
-    const woeid = getlocations.map(index => index.title);
+    const woeid = getlocations.map(index => index.woeid);
     setLocations(woeid);
-    console.log(woeid);
+    console.log(getlocations);
     const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
     console.log(getData.consolidated_weather[0]);
+    console.log(getData);
     dispatch({
       type: "SET_WEATHER",
       citiesWeather: getData.consolidated_weather
@@ -29888,7 +29891,11 @@ function ContextProvider({
       openPopup,
       closePopup,
       locations,
-      setLocations
+      setLocations,
+      searchResult,
+      setSearchResult,
+      searchValue,
+      setSearchValue
     }
   }, children);
 }
@@ -32259,6 +32266,10 @@ function Weather() {
     }
 
     @media(min-width: 800px) {
+
+      .form {
+        max-width: 32%;
+      }
       .weatherLists {
         display: grid;
         grid-template-columns: 33% 67%;
@@ -32290,7 +32301,11 @@ function Weather() {
     openPopup,
     closePopup,
     locations,
-    setLocations
+    setLocations,
+    searchResult,
+    setSearchResult,
+    searchValue,
+    setSearchValue
   } = (0, _react.useContext)(_GlobalContext.Context);
   const {
     weather,
@@ -32298,7 +32313,6 @@ function Weather() {
     isLoaded,
     defaultWeather
   } = state;
-  const [searchValue, setSearchValue] = (0, _react.useState)("");
   const applicableDate = new Date(defaultWeather.applicable_date);
   const month = applicableDate.toLocaleString("default", {
     month: "short"
@@ -32313,6 +32327,11 @@ function Weather() {
     })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("span", {
       className: "degrees"
     }, Math.floor(weatherList.max_temp), " \xBAc"), /*#__PURE__*/_react.default.createElement("span", null, Math.floor(weatherList.min_temp), " \xBAc")));
+  });
+  const results = weather.map(weatherResult => {
+    return /*#__PURE__*/_react.default.createElement("button", {
+      key: weatherResult.id
+    }, weatherResult.title);
   });
 
   const submitSearch = e => {
@@ -32335,7 +32354,7 @@ function Weather() {
     placeholder: "Search location",
     value: searchValue,
     onChange: e => setSearchValue(e.target.value)
-  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("button", null, searchValue))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
+  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("div", null, results))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
     className: "weatherLists"
   }, /*#__PURE__*/_react.default.createElement("ul", {
     className: "defaultWeather"
@@ -32422,7 +32441,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62249" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57843" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
