@@ -51,12 +51,9 @@ function ContextProvider({ children }) {
     const getlocations = await res.json();
     const woeid = getlocations.map((index) => index.woeid);
     setLocations(woeid)
-    console.log(getlocations);
-
     const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
-    console.log(getData.consolidated_weather[0]);
-    console.log(getData)
+    console.log(getData);
     dispatch({
       type: "SET_WEATHER",
       citiesWeather: getData.consolidated_weather,
@@ -96,8 +93,8 @@ function ContextProvider({ children }) {
         setLocations,
         searchResult,
         setSearchResult,
+        setSearchValue,
         searchValue,
-        setSearchValue
       }}
     >
       {children}

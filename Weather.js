@@ -197,12 +197,18 @@ export default function Weather() {
     )
   })
 
+  // console.log(results)
 
   const submitSearch = (e) => {
     e.preventDefault();
-    setSearchValue(locations);
-    console.log(e.target.value);
+    if(e.target.location.value !== "") {
+      setSearchValue(e.target.location.value);
+      setLocations(e.target.location.value)
+    } else {
+      return null
+    } 
   };
+console.log(searchValue)
 
   return (
     <DivStyle>
@@ -215,17 +221,16 @@ export default function Weather() {
             <button type="button" onClick={closePopup} className="close-btn">
               X
             </button>
-            <label>
+            <label> 
               <input
                 type="text"
+                name="location"
                 placeholder="Search location"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
               />
               <button>Search</button>
             </label>
             <div>
-              {results}
+              {results.searchValue}
             </div>
           </form>
         </>
@@ -268,6 +273,7 @@ export default function Weather() {
                   <progress max="100" value={defaultWeather.humidity}>
                     {/* {defaultWeather.humidity} % */}
                   </progress>
+                  <span>%</span>
                 </div>
                 <div className="hightlights">
                   <h3>Visibility</h3>

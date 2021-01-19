@@ -29848,10 +29848,8 @@ function ContextProvider({
     const getlocations = await res.json();
     const woeid = getlocations.map(index => index.woeid);
     setLocations(woeid);
-    console.log(getlocations);
     const response = await fetch(`${DEFAULT_ENDPOINT}${woeid}`);
     const getData = await response.json();
-    console.log(getData.consolidated_weather[0]);
     console.log(getData);
     dispatch({
       type: "SET_WEATHER",
@@ -29894,8 +29892,8 @@ function ContextProvider({
       setLocations,
       searchResult,
       setSearchResult,
-      searchValue,
-      setSearchValue
+      setSearchValue,
+      searchValue
     }
   }, children);
 }
@@ -32332,14 +32330,20 @@ function Weather() {
     return /*#__PURE__*/_react.default.createElement("button", {
       key: weatherResult.id
     }, weatherResult.title);
-  });
+  }); // console.log(results)
 
   const submitSearch = e => {
     e.preventDefault();
-    setSearchValue(locations);
-    console.log(e.target.value);
+
+    if (e.target.location.value !== "") {
+      setSearchValue(e.target.location.value);
+      setLocations(e.target.location.value);
+    } else {
+      return null;
+    }
   };
 
+  console.log(searchValue);
   return /*#__PURE__*/_react.default.createElement(DivStyle, null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: openPopup,
     className: "search-btn"
@@ -32351,10 +32355,9 @@ function Weather() {
     className: "close-btn"
   }, "X"), /*#__PURE__*/_react.default.createElement("label", null, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
-    placeholder: "Search location",
-    value: searchValue,
-    onChange: e => setSearchValue(e.target.value)
-  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("div", null, results))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
+    name: "location",
+    placeholder: "Search location"
+  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("div", null, results.searchValue))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
     className: "weatherLists"
   }, /*#__PURE__*/_react.default.createElement("ul", {
     className: "defaultWeather"
@@ -32372,7 +32375,7 @@ function Weather() {
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Humidity"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, defaultWeather.humidity), " %"), /*#__PURE__*/_react.default.createElement("progress", {
     max: "100",
     value: defaultWeather.humidity
-  })), /*#__PURE__*/_react.default.createElement("div", {
+  }), /*#__PURE__*/_react.default.createElement("span", null, "%")), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
   }, /*#__PURE__*/_react.default.createElement("h3", null, "Visibility"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("b", null, Math.floor(defaultWeather.visibility)), " miles")), /*#__PURE__*/_react.default.createElement("div", {
     className: "hightlights"
@@ -32441,7 +32444,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57843" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57485" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
