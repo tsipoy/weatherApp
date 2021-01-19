@@ -20,3 +20,7 @@ b {
     font-size: 64px;
     line-height: 75px;
 }
+
+button {
+    cursor: pointer;
+}

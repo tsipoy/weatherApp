@@ -32357,7 +32357,7 @@ function Weather() {
     type: "text",
     name: "location",
     placeholder: "Search location"
-  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("div", null, results.searchValue))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
+  }), /*#__PURE__*/_react.default.createElement("button", null, "Search")), /*#__PURE__*/_react.default.createElement("div", null, searchValue))), isLoaded ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading...") : /*#__PURE__*/_react.default.createElement("div", {
     className: "weatherLists"
   }, /*#__PURE__*/_react.default.createElement("ul", {
     className: "defaultWeather"

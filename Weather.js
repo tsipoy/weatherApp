@@ -230,7 +230,7 @@ console.log(searchValue)
               <button>Search</button>
             </label>
             <div>
-              {results.searchValue}
+              {searchValue}
             </div>
           </form>
         </>
